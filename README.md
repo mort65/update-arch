@@ -1,2 +1,2 @@
 # update-arch
-This script check for archlinux news, update archlinux, refresh mirrors...
+This script checks for Arch Linux news, update Arch Linux, refresh mirrors and etc.
