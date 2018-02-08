@@ -1,2 +1,4 @@
 # update-arch
 This script checks for Arch Linux news, update Arch Linux, refresh mirrors and etc.
+Requirements:
+yaourt,rsstail
