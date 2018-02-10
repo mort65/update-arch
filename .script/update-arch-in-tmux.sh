@@ -200,7 +200,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-    elif [[ $PARAM =~ ^--[Hh][Ii][Bb][Ee][Rr][Nn][Aa][Tt][Ee]$ ]] || [[ ^--[Ff][Rr][Ee][Ee][Zz][Ee]$ ]] || [[ $PARAM =~ ^-[Ff]$ ]]; then
+    elif [[ $PARAM =~ ^--[Hh][Ii][Bb][Ee][Rr][Nn][Aa][Tt][Ee]$ ]] || [[ $PARAM =~ ^--[Ff][Rr][Ee][Ee][Zz][Ee]$ ]] || [[ $PARAM =~ ^-[Ff]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Hibernate="Yes"
       else
