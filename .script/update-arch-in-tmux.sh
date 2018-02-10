@@ -35,7 +35,7 @@ Sleep=""
 Logout=""
 Hibernate=""
 Reboot=""
-UpdateMirrorCMD="${SUDO} /usr/bin/reflector --sort rate --latest 10 --protocol https --protocol ftp --age 6 --save /etc/pacman.d/mirrorlist"
+UpdateMirrorCMD="${SUDO} /usr/bin/reflector --country 'United States' --country Canada --country 'United Kingdom' --country Denmark --country Greece --country 'South Korea' --country Japan --country India --country Qatar --country Turkey --country Iran --sort rate --latest 10 --protocol https --protocol ftp --age 6 --save /etc/pacman.d/mirrorlist"
 SuspendCMD="/usr/bin/systemctl suspend"
 ShutdownCMD="/usr/bin/systemctl poweroff"
 RebootCMD="/usr/bin/systemctl reboot"
@@ -136,7 +136,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-    elif [[ $PARAM =~ ^--[Ss][Yy][Nn][Cc]$ ]] || [[ $PARAM =~ ^-[Ss]$ ]]; then
+	elif [[ $PARAM =~ ^--[Ss][Yy][Nn][Cc]$ ]] || [[ $PARAM =~ ^-[Ss]$ ]]; then
       if [[ $Sync == "" ]]; then
         Sync="Yes"
 	  else
@@ -144,7 +144,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-    elif [[ $PARAM =~ ^--[Nn][Oo][Ll][Oo][Gg]$ ]] || [[ $PARAM =~ ^-[Ll]$ ]]; then
+	elif [[ $PARAM =~ ^--[Nn][Oo][Ll][Oo][Gg]$ ]] || [[ $PARAM =~ ^-[Ll]$ ]]; then
       if [[ $LoggingOff == "" ]]; then
         LoggingOff="Yes"
 	  else
@@ -152,7 +152,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-    elif [[ $PARAM =~ ^--[Nn][Oo][Rr][Ss][Ss]$ ]] || [[ $PARAM =~ ^-[Rr]$ ]]; then
+	elif [[ $PARAM =~ ^--[Nn][Oo][Rr][Ss][Ss]$ ]] || [[ $PARAM =~ ^-[Rr]$ ]]; then
       if [[ $RSSOff == "" ]]; then
         RSSOff="Yes"
       else
