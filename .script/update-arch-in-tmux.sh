@@ -136,7 +136,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-	elif [[ $PARAM =~ ^--[Ss][Yy][Nn][Cc]$ ]] || [[ $PARAM =~ ^-[Ss]$ ]]; then
+    elif [[ $PARAM =~ ^--[Ss][Yy][Nn][Cc]$ ]] || [[ $PARAM =~ ^-[Ss]$ ]]; then
       if [[ $Sync == "" ]]; then
         Sync="Yes"
 	  else
@@ -144,7 +144,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-	elif [[ $PARAM =~ ^--[Nn][Oo][Ll][Oo][Gg]$ ]] || [[ $PARAM =~ ^-[Ll]$ ]]; then
+    elif [[ $PARAM =~ ^--[Nn][Oo][Ll][Oo][Gg]$ ]] || [[ $PARAM =~ ^-[Ll]$ ]]; then
       if [[ $LoggingOff == "" ]]; then
         LoggingOff="Yes"
 	  else
@@ -152,7 +152,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-	elif [[ $PARAM =~ ^--[Nn][Oo][Rr][Ss][Ss]$ ]] || [[ $PARAM =~ ^-[Rr]$ ]]; then
+    elif [[ $PARAM =~ ^--[Nn][Oo][Rr][Ss][Ss]$ ]] || [[ $PARAM =~ ^-[Rr]$ ]]; then
       if [[ $RSSOff == "" ]]; then
         RSSOff="Yes"
       else
@@ -208,7 +208,7 @@ if [ -n "$1" ]; then #non-empty
         echo ""
 		usage
 	  fi
-    elif [[ $PARAM =~ ^-[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy][AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy][AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?$ ]]; then
+    elif [[ $PARAM =~ ^-[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy][AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy][AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?[AaBbEeFfGgIiLlMmOoPpRrSsTtUuYy]?$ ]]; then
 	  i=1
 	  while (( i++ < ${#PARAM} ))
 	  do
