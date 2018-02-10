@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#this script check for archlinux news and if no news found update the system
+#this script check for archlinux news and if no news found update archlinux.
 
 Args=$@
 USERNAME=${SUDO_USER:-$(id -u -n)}
