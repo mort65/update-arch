@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 #this script check for archlinux news and if no news found update archlinux.
@@ -6,6 +7,7 @@ Args=$@
 USERNAME=${SUDO_USER:-$(id -u -n)}
 HOMEDIR="/home/$USERNAME"
 SUDO=""
+
 if [ $EUID -ne 0 ]; then
     SUDO='/usr/bin/sudo'
 fi
@@ -48,12 +50,12 @@ function help {
     echo "A script for updating archlinux."
     echo ""
     echo "  -a, --aur       Refresh and synchronize all normal and aur package databases"
-    echo "  -o  --poweroff  Shutdown computer if the script finished without error"         
+    echo "  -o  --poweroff  Shutdown computer if the script finished without error"
     echo "  -e  --reboot    Restart computer if the script finished without error"
     echo "  -f  --freeze    Hibernate computer if the script finished without error"
     echo "  -u  --suspend   Suspend computer if the script finished without error"
     echo "  -g  --logout    Logout if the script finished without error"
-    echo "  --shutdown      Shutdown computer if the script finished without error"     
+    echo "  --shutdown      Shutdown computer if the script finished without error"
     echo "  --restart       Restart computer if the script finished without error"
     echo "  --hibernate     Hibernate computer if the script finished without error"
     echo "  --sleep         Suspend computer if the script finished without error"
@@ -61,8 +63,8 @@ function help {
     echo "  -s, --sync      Refresh and synchronize normal package databases"
     echo "  -y, --refresh   Force the refresh of package databases"
     echo "  -n, --nonamcap  Disable checking packages with namcap"
-    echo "  -r  --norss     Disable checking for archlinux news" 
-    echo "  -p, --nopac     Disable checking for pacnew files" 
+    echo "  -r  --norss     Disable checking for archlinux news"
+    echo "  -p, --nopac     Disable checking for pacnew files"
     echo "  -i, --install   Install a package"
     echo "  -b, --build     Build a package"
     echo "  -l  --nolog     Disable logging"
@@ -105,7 +107,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi 
+	  fi
     elif [[ $PARAM =~ ^--[Mm][Ii][Rr][Rr][Oo][Rr]$ ]] || [[ $PARAM =~ ^-[Mm]$ ]]; then
 	  if [[ $Mirror == "" ]]; then
         Mirror="Yes"
@@ -185,7 +187,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi  
+	  fi
     elif [[ $PARAM =~ ^--[Ss][Uu][Ss][Pp][Ee][Nn][Dd]$ ]] || [[ $PARAM =~ ^--[Ss][Ll][Ee][Ee][Pp]$ ]] || [[ $PARAM =~ ^-[Uu]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Sleep="Yes"
@@ -201,7 +203,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi 
+	  fi
     elif [[ $PARAM =~ ^--[Ll][Oo][Gg][Oo][Ff][Ff]$ ]] || [[ $PARAM =~ ^--[Ll][Oo][Gg][Oo][Uu][Tt]$ ]] || [[ $PARAM =~ ^-[Gg]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Logout="Yes"
@@ -246,7 +248,7 @@ if [ -n "$1" ]; then #non-empty
 				echo -e $red"Error:$reset Invalid arguments '${Args}'"
 				echo ""
 				usage
-			fi		
+			fi
         elif [[ $char =~ [Yy] ]]; then
 			if [[ $Refresh == "" ]]; then
 				Refresh="Yes"
@@ -310,7 +312,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi  
+            fi
         elif [[ $char =~ [Oo] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Shutdown="Yes"
@@ -318,7 +320,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi 
+            fi
         elif [[ $char =~ [Ee] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Reboot="Yes"
@@ -334,7 +336,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi 
+            fi
         elif [[ $char =~ [Ff] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Hibernate="Yes"
@@ -387,7 +389,7 @@ if [[ ! $PacOff == "Yes" ]]; then
         read -p "Press enter to exit..."
         exit 1
     else
-        echo 
+        echo
         echo "No pacnew file found"
     fi
     echo
@@ -413,7 +415,7 @@ if [[ ! $RSSOff == "Yes" ]]; then
             echo -e $red" !!!$reset New arch linux news entry found $red!!!$reset"
             echo
             [ -f $TMPFILE ] && cat "${TMPFILE}" 2> /dev/null
-            sleep 3		
+            sleep 3
             /usr/bin/mv -f $TMPFILE $RSSFILE
             { /usr/bin/rsstail -n 5 -1 -l -d -H -u https://www.archlinux.org/feeds/news/ | /usr/bin/less ; } || { echo -e $red"Error:$reset Cannot download the rss content" ; read -p "Press enter to exit..." ; exit 1; }
             exit 0
@@ -454,7 +456,7 @@ if [[ $Install == "Yes" ]] || [[ $Build == "Yes" ]]; then
         echo ""
         echo -e $blue"===>$reset Checking the build package file for error..."
         echo ""
-        /usr/bin/find . -maxdepth 1 -name '*.pkg.tar.xz' -exec /usr/bin/namcap {} \;
+	/usr/bin/find . -maxdepth 1 \( -name '*.pkg.tar.xz' -o -name '*.pkg.tar.zst' \) -exec /usr/bin/namcap {} \;
         echo ""
         read -p "Press enter to continue..."
     fi
@@ -462,21 +464,25 @@ if [[ $Install == "Yes" ]] || [[ $Build == "Yes" ]]; then
         echo ""
         echo -e $blue"===>$reset Installing the package..."
         echo ""
-        { /usr/bin/find . -maxdepth 1 -name '*.pkg.tar.xz' -exec $SUDO /usr/bin/pacman -U {} \; ; } || { echo "" ; echo -e $red"Error:$reset Cannot install the package" ; echo "" ; read -p "Press enter to exit..." ; exit 1; }
+	{ /usr/bin/find . -maxdepth 1 \( -name '*.pkg.tar.xz' -o -name '*.pkg.tar.zst' \) -exec $SUDO /usr/bin/pacman -U {} \; ; } || { echo "" ; echo -e $red"Error:$reset Cannot install the package" ; echo "" ; read -p "Press enter to exit..." ; exit 1; }
     fi
-fi	
+fi
 if [[ $Sync == "Yes" ]]; then
     echo
     echo -e $blue"===>$reset Checking for updates..."
     echo
     if [[ ! $Refresh == "Yes" ]]; then
         if [[ $AUR == "Yes" ]]; then
-            if [ -x /usr/bin/yaourt ]; then
+            if [ -x /usr/bin/yay ]; then
+                { /usr/bin/sudo -u $USERNAME /usr/bin/yay -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
+            elif [ -x /usr/bin/trizen ]; then
+                { /usr/bin/sudo -u $USERNAME /usr/bin/trizen -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
+            elif [ -x /usr/bin/yaourt ]; then
                 { /usr/bin/sudo -u $USERNAME /usr/bin/yaourt -Syua ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
             else
                 echo -e $red"Error:$reset Yaourt not found"
                 exit 1
-            fi 
+            fi
         elif [ -x /usr/bin/pacmatic ]; then
             { $SUDO /usr/bin/pacmatic -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
         else
@@ -484,7 +490,11 @@ if [[ $Sync == "Yes" ]]; then
         fi
     else
         if [[ $AUR == "Yes" ]]; then
-            if [ -x /usr/bin/yaourt ]; then
+            if [ -x /usr/bin/yay ]; then
+                { /usr/bin/sudo -u $USERNAME /usr/bin/yay -Syyu ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
+            elif [ -x /usr/bin/trizen ]; then
+                { /usr/bin/sudo -u $USERNAME /usr/bin/trizen -Syyu ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
+            elif [ -x /usr/bin/yaourt ]; then
                 { /usr/bin/sudo -u $USERNAME /usr/bin/yaourt -Syyua ; } || { echo -e $red"Error:$reset Cannot update the system" ; read -p "Press enter to exit..." ; exit 1; }
             else
                 echo -e $red"Error:$reset Yaourt not found"
