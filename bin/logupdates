@@ -1,42 +1,81 @@
-#!/bin/bash
+#!/usr/bin/env sh
 #this script log available arch linux updates
-
 USERNAME=${SUDO_USER:-$(id -u -n)}
-HOMEDIR="/home/$USERNAME"
+HOMEDIR="/home/${USERNAME}"
+LOCKNAME="$(basename "$0").lock"
+LOCKPATH="${HOMEDIR}/.${LOCKNAME}"
+
+prepareLock() {
+	[ -f "$LOCKPATH" ] && return 1
+	touch "$LOCKPATH" || return 1
+	trap 'command rm -f "$LOCKPATH"' EXIT
+	return 0
+}
+
+isConnected() {
+	for interface in /sys/class/net/*
+	do
+		case "$interface" in
+			lo)	;;
+			*)
+				if [ "$(/usr/bin/cat "$interface"/carrier)" = 1 ] ;then
+					if /usr/bin/ping -q -w 30 -c 1 8.8.8.8 > /dev/null 2>&1 \
+					#	|| /usr/bin/wget -q --spider "http://google.com" \
+					#	|| printf "%s\n\n" "GET http://google.com HTTP/1.0" | /usr/bin/nc google.com 80 -w 30 > /dev/null 2>&1
+					then
+						return 0
+					else
+						return 1
+					fi
+				fi
+				;;
+		esac
+	done
+	return 1
+}
+
+prepareLock || exit 1
+isConnected || exit 1
 
 #enabling notify-send for cron
+export DISPLAY=:0.0
+# shellcheck source=/dev/null
 if [ -r "$HOMEDIR/.dbus/Xdbus" ]; then
   . "$HOMEDIR/.dbus/Xdbus"
 fi
 
-COMMAND="$((/usr/bin/checkupdates; /usr/bin/cower -u 2>/dev/null) | /usr/bin/wc -l)"
-TITLE="System Update"
 MSG=""
+MTIME=""
+NOTIF_INTERVAL_MINS=719
+NOTIF_MIN_UPDATES=10
+TITLE="System Update"
 CDATE=$(/usr/bin/date "+%a %b %d %H:%M")
-if [[ $COMMAND =~ ^[0-9]+$ ]]; then
-	if [[ "$COMMAND" -ne "0" ]]; then
-		if [[ "$COMMAND" -eq "1" ]]; then
-			MSG="an update is available"
-		elif [[ "$COMMAND" -gt "1" ]]; then
-			MSG="$COMMAND updates are available"
-		else
-			exit 1
-		fi
+COMMAND="$( (/usr/bin/checkupdates; /usr/bin/yay -Qu 2>/dev/null) | /usr/bin/sort -u | /usr/bin/wc -l)"
 
-		if [[ $XDG_CURRENT_DESKTOP == "KDE" ]]; then
-			#/usr/bin/notify-send --expire-time=0 "$TITLE" "\- $CDATE \-\n$MSG" --icon=software-update-available
+case $COMMAND in
+	''|*[!0-9]*)
+		exit 1
+		;;
+	*)
+		if [ "$COMMAND" -ge "$NOTIF_MIN_UPDATES" ] && \
+			[ "$(($(/usr/bin/date "+%s") - $(/usr/bin/date -r "$HOMEDIR/.number_of_updates.txt" "+%s")))" -ge \
+			"$(( NOTIF_INTERVAL_MINS * 60 ))" ]; then
+			if [ "$COMMAND" -eq "1" ]; then
+				MSG="an update is available"
+			elif [ "$COMMAND" -gt "1" ]; then
+				MSG="$COMMAND updates are available"
+			else
+				exit 1
+			fi
 			/usr/bin/notify-send --expire-time=30000 "$TITLE" "\- $CDATE \-\n$MSG" --icon=software-update-available
+			echo "$COMMAND" > "$HOMEDIR/.number_of_updates.txt"
 		else
-			/usr/bin/notify-send --expire-time=30000 "$TITLE" "\- $CDATE \-\n$MSG" --icon=software-update-available
+			MTIME="$(/usr/bin/date -R -r "$HOMEDIR/.number_of_updates.txt")"
+			echo "$COMMAND" > "$HOMEDIR/.number_of_updates.txt"
+			#Restoring access/modification time
+			/usr/bin/touch -d "$MTIME" "$HOMEDIR/.number_of_updates.txt"
 		fi
-		echo "$COMMAND" > "$HOMEDIR/.number_of_updates.txt"
-	else
-		#clear content of the file
-		/usr/bin/truncate -s 0 "$HOMEDIR/.number_of_updates.txt"
-	fi
-else
-	exit 1
-	
-fi
+		;;
+esac
 
 exit 0
