@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#This script checks for Arch Linux news, update Arch Linux, refresh mirrors and etc. 
+#This script checks for Arch Linux news, update Arch Linux, refresh mirrors and etc.
 # Requires: pacman, reflector, yaourt, rsstail
 
 # Colors
@@ -10,10 +10,11 @@ red="\033[1;31m"
 bold="\033[1;37m"
 reset="\033[0m"
 
-Args=$@ 
+Args=$@
 USERNAME=${SUDO_USER:-$(id -u -n)}
 HOMEDIR="/home/$USERNAME"
 SUDO=""
+
 if [ $EUID -ne 0 ]; then
     SUDO='/usr/bin/sudo'
 fi
@@ -44,7 +45,7 @@ UpdateMirrorCMD="${SUDO} /usr/bin/reflector --sort rate --latest 10 --protocol h
 SuspendCMD="/usr/bin/systemctl suspend"
 ShutdownCMD="/usr/bin/systemctl poweroff"
 RebootCMD="/usr/bin/systemctl reboot"
-LogoutCMD="/usr/bin/loginctl terminate-user $USERNAME"
+LogoutCMD="$HOMEDIR/bin/logoff"
 HibernateCMD="/usr/bin/systemctl hibernate"
 
 function help {
@@ -52,12 +53,12 @@ function help {
     echo "A script for updating archlinux."
     echo ""
     echo "  -a, --aur       Refresh and synchronize all normal and aur package databases"
-    echo "  -o  --poweroff  Shutdown computer if the script finished without error"         
+    echo "  -o  --poweroff  Shutdown computer if the script finished without error"
     echo "  -e  --reboot    Restart computer if the script finished without error"
     echo "  -f  --freeze    Hibernate computer if the script finished without error"
     echo "  -u  --suspend   Suspend computer if the script finished without error"
     echo "  -g  --logout    Logout if the script finished without error"
-    echo "  --shutdown      Shutdown computer if the script finished without error"     
+    echo "  --shutdown      Shutdown computer if the script finished without error"
     echo "  --restart       Restart computer if the script finished without error"
     echo "  --hibernate     Hibernate computer if the script finished without error"
     echo "  --sleep         Suspend computer if the script finished without error"
@@ -66,8 +67,8 @@ function help {
     echo "  -y, --refresh   Force the refresh of package databases"
     echo "  -n, --nonamcap  Disable checking packages with namcap"
     echo "  -r  --norss     Disable checking for archlinux news"
-    echo "  -t, --tmux      Run this script in a tmux session" 
-    echo "  -p, --nopac     Disable checking for pacnew files" 
+    echo "  -t, --tmux      Run this script in a tmux session"
+    echo "  -p, --nopac     Disable checking for pacnew files"
     echo "  -i, --install   Install a package"
     echo "  -b, --build     Build a package"
     echo "  -l  --nolog     Disable logging"
@@ -116,7 +117,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi  
+	  fi
     elif [[ $PARAM =~ ^--[Rr][Ee][Ff][Rr][Ee][Ss][Hh]$ ]] || [[ $PARAM =~ ^-[Yy]$ ]]; then
       if [[ $Refresh == "" ]]; then
         Refresh="Yes"
@@ -172,7 +173,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi  
+	  fi
     elif [[ $PARAM =~ ^--[Tt][Mm][Uu][Xx]$ ]] || [[ $PARAM =~ ^-[Tt]$ ]]; then
       if [[ $Tmux == "" ]]; then
         Tmux="Yes"
@@ -188,7 +189,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi 
+	  fi
     elif [[ $PARAM =~ ^--[Pp][Oo][Ww][Ee][Rr][Oo][Ff][Ff]$ ]] || [[ $PARAM =~ ^--[Ss][Hh][Uu][Tt][Dd][Oo][Ww][Nn]$ ]] || [[ $PARAM =~ ^-[Oo]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Shutdown="Yes"
@@ -196,7 +197,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi  
+	  fi
     elif [[ $PARAM =~ ^--[Ss][Uu][Ss][Pp][Ee][Nn][Dd]$ ]] || [[ $PARAM =~ ^--[Ss][Ll][Ee][Ee][Pp]$ ]] || [[ $PARAM =~ ^-[Uu]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Sleep="Yes"
@@ -204,7 +205,7 @@ if [ -n "$1" ]; then #non-empty
         echo -e $red"Error:$reset Invalid arguments '${Args}'"
         echo ""
 		usage
-	  fi 
+	  fi
     elif [[ $PARAM =~ ^--[Rr][Ee][Ss][Tt][Aa][Rr][Tt]$ ]] || [[ $PARAM =~ ^--[Rr][Ee][Bb][Oo][Oo][Tt]$ ]] || [[ $PARAM =~ ^-[Ee]$ ]]; then
       if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
         Reboot="Yes"
@@ -258,7 +259,7 @@ if [ -n "$1" ]; then #non-empty
 				echo -e $red"Error:$reset Invalid arguments '${Args}'"
 				echo ""
 				usage
-			fi	
+			fi
    		elif [[ $char =~ [Ii] ]]; then
 			if [[ $Install == "" ]]; then
 				Install="Yes"
@@ -330,7 +331,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi  
+            fi
         elif [[ $char =~ [Oo] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Shutdown="Yes"
@@ -338,7 +339,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi 
+            fi
         elif [[ $char =~ [Ee] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Reboot="Yes"
@@ -354,7 +355,7 @@ if [ -n "$1" ]; then #non-empty
                 echo -e $red"Error:$reset Invalid arguments '${Args}'"
                 echo ""
                 usage
-            fi 
+            fi
         elif [[ $char =~ [Ff] ]]; then
             if [[ $Sleep == "" ]] && [[ $Shutdown == "" ]] && [[ $Reboot == "" ]] && [[ $Hibernate == "" ]] && [[ $Logout == "" ]]; then
                 Hibernate="Yes"
@@ -421,7 +422,7 @@ if [[ $Tmux == "Yes" ]]; then
                 Arguments="${Arguments}y"
             fi
             if [[ $LoggingOff == "Yes" ]]; then
-                Arguments = "${Arguments}l"
+                Arguments="${Arguments}l"
             fi
             if [[ $RSSOff == "Yes" ]]; then
                 Arguments="${Arguments}r"
@@ -446,14 +447,14 @@ if [[ $Tmux == "Yes" ]]; then
             fi
             if [[ $Reboot == "Yes" ]]; then
                 Arguments="${Arguments}e"
-            fi        
+            fi
             { /usr/bin/tmux new-session -d -s $session "/usr/bin/sudo $HOMEDIR/.script/.update-arch-in-tmux.sh -${Arguments}" ; } || { exit 1 ; }
             { /usr/bin/tmux attach-session -t $session ; } || { exit 1 ; }
         fi
         exit 0
     else
         echo -e $red"Error:$reset You cannot run this script in a tmux session as root"
-        exit 1    
+        exit 1
     fi
 fi
 
@@ -468,7 +469,7 @@ if [[ ! $PacOff == "Yes" ]]; then
         echo
         exit 1
     else
-        echo 
+        echo
         echo "No pacnew file found"
     fi
   echo
@@ -494,7 +495,7 @@ if [[ ! $RSSOff == "Yes" ]]; then
 		echo -e $red" !!!$reset New arch linux news entry found $red!!!$reset"
 		echo
 		[ -f $TMPFILE ] && cat "${TMPFILE}" 2> /dev/null
-		sleep 3		
+		sleep 3
 		/usr/bin/mv -f $TMPFILE $RSSFILE
 		{ /usr/bin/rsstail -n 5 -1 -l -d -H -u https://www.archlinux.org/feeds/news/ | /usr/bin/less ; } || { echo -e $red"Error:$reset Cannot download the rss content" ; exit 1; }
 		exit 0
@@ -535,7 +536,7 @@ if [[ $Install == "Yes" ]] || [[ $Build == "Yes" ]]; then
         echo ""
         echo -e $blue"===>$reset Checking the build package file for error..."
         echo ""
-        /usr/bin/find . -maxdepth 1 -name '*.pkg.tar.xz' -exec /usr/bin/namcap {} \;
+	/usr/bin/find . -maxdepth 1 \( -name '*.pkg.tar.xz' -o -name '*.pkg.tar.zst' \) -exec /usr/bin/namcap {} \;
         echo ""
         read -p "Press enter to continue..."
     fi
@@ -543,21 +544,25 @@ if [[ $Install == "Yes" ]] || [[ $Build == "Yes" ]]; then
         echo ""
         echo -e $blue"===>$reset Installing the package..."
         echo ""
-        { /usr/bin/find . -maxdepth 1 -name '*.pkg.tar.xz' -exec $SUDO /usr/bin/pacman -U {} \; ; } || { echo "" ; echo -e $red"Error:$reset Cannot install the package" ; exit 1; }
+	{ /usr/bin/find . -maxdepth 1 \( -name '*.pkg.tar.xz' -o -name '*.pkg.tar.zst' \) -exec $SUDO /usr/bin/pacman -U {} \; ; } || { echo "" ; echo -e $red"Error:$reset Cannot install the package" ; exit 1; }
     fi
-fi	
+fi
 if [[ $Sync == "Yes" ]]; then
 	echo
 	echo -e $blue"===>$reset Checking for updates..."
 	echo
 	if [[ ! $Refresh == "Yes" ]]; then
 	  if [[ $AUR == "Yes" ]]; then
-	    if [ -x /usr/bin/yaourt ]; then
+	    if [ -x /usr/bin/yay ]; then
+            { /usr/bin/sudo -u $USERNAME /usr/bin/yay -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
+	    elif [ -x /usr/bin/trizen ]; then
+            { /usr/bin/sudo -u $USERNAME /usr/bin/trizen -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
+	    elif [ -x /usr/bin/yaourt ]; then
             { /usr/bin/sudo -u $USERNAME /usr/bin/yaourt -Syua ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
         else
             echo -e $red"Error:$reset Yaourt not found"
             exit 1
-        fi 
+        fi
       elif [ -x /usr/bin/pacmatic ]; then
         { $SUDO /usr/bin/pacmatic -Syu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
       else
@@ -565,12 +570,16 @@ if [[ $Sync == "Yes" ]]; then
       fi
     else
       if [[ $AUR == "Yes" ]]; then
-        if [ -x /usr/bin/yaourt ]; then
+        if [ -x /usr/bin/yay ]; then
+            { /usr/bin/sudo -u $USERNAME /usr/bin/yay -Syyu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
+        elif [ -x /usr/bin/trizen ]; then
+            { /usr/bin/sudo -u $USERNAME /usr/bin/trizen -Syyu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
+        elif [ -x /usr/bin/yaourt ]; then
             { /usr/bin/sudo -u $USERNAME /usr/bin/yaourt -Syyua ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
         else
             echo -e $red"Error:$reset Yaourt not found"
             exit 1
-        fi  
+        fi
       elif [ -x /usr/bin/pacmatic ]; then
         { $SUDO /usr/bin/pacmatic -Syyu ; } || { echo -e $red"Error:$reset Cannot update the system" ; exit 1; }
       else
@@ -580,7 +589,7 @@ if [[ $Sync == "Yes" ]]; then
 fi
 echo
 if [[ ! $RSSOff == "Yes" ]]; then
-  [ -f $RSSFILE ] && cat "${RSSFILE}" | 2> /dev/null
+  [ -f $RSSFILE ] && cat "${RSSFILE}" 2> /dev/null
 fi
 echo
 if [[ ! $LoggingOff == "Yes" ]]; then
@@ -617,7 +626,7 @@ elif [[ $Shutdown == "Yes" ]]; then
      sleep 1s
      clear
      echo -e $red"Shutdown$reset in$green $x$reset seconds..."
-     x=$(( $x - 1 ))
+     x=$(( x - 1 ))
   done
   eval "${ShutdownCMD}"
 elif [[ $Reboot == "Yes" ]]; then
